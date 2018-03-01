@@ -30,6 +30,10 @@ class Controller {
         res.json({ code: 0, data })
     }
 
+    querySuccessCount(res, data, count) {
+        res.json({ code: 0, data, count })
+    }
+
     queryFail(res, err) {
         res.json({ code: 500, err })
     }
