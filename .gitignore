@@ -1,0 +1,8 @@
+node_modules
+package-lock.json
+LinkedYouApiLog.log
+npm-debug.log
+.DS_Store
+public
+.eslintrc.js
+xgds.log

@@ -1,0 +1,41 @@
+{
+  "name": "xgds-api",
+  "version": "1.0.0",
+  "main": "bin/www",
+  "private": "true",
+  "apidoc": {
+    "name": "选股大师api文档",
+    "version": "1.0.0",
+    "title": "api文档",
+    "url": "https://api.xuangudashi.com",
+    "forceLanguage": "zh-cn"
+  },
+  "scripts": {
+    "dev": "cross-env NODE_ENV=dev node bin/www",
+    "prod": "cross-env NODE_ENV=prod node bin/www",
+    "start": "cross-env NODE_ENV=dev node bin/www"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://184i5y4446.iok.la/xgds/api.git"
+  },
+  "keywords": [
+    "nodejs"
+  ],
+  "author": "LinkedYou",
+  "dependencies": {
+    "body-parser": "^1.18.1",
+    "cross-env": "^5.0.5",
+    "crypto": "^1.0.1",
+    "express": "^4.15.4",
+    "jsonwebtoken": "^8.0.1",
+    "knex": "^0.14.2",
+    "lodash": "^4.17.4",
+    "moment": "^2.18.1",
+    "morgan": "^1.8.2",
+    "pg": "^7.3.0",
+    "request": "^2.83.0",
+    "uuid": "^3.1.0",
+    "validator": "^8.2.0"
+  }
+}
