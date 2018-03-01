@@ -1,0 +1,13 @@
+#!/usr/local/bin/node
+
+const server = require('../server');
+
+server.listen(server.get('port'), () => {
+    console.log(`=> server(pid: ${process.pid}) is listen at port ${server.get('port')}...`);
+});
+
+server.on('error', (err) => {
+    console.log(`=> err: ${err}`);
+});
+
+process.on('uncaughtException', err => console.log(`=> uncaughtException: ${err}`));
