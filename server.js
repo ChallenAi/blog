@@ -15,7 +15,7 @@ app.set('port', process.env.PORT || config.port)
 app.disable('x-powered-by')
 
 if (process.env.NODE_ENV === 'prod') {
-    const log = fs.createWriteStream(path.join(__dirname, 'xgds.log'), { flags: 'a' })
+    const log = fs.createWriteStream(path.join(__dirname, 'iTools.log'), { flags: 'a' })
     app.use(logger('combined', { stream: log }))
 } else {
     app.use(logger('dev'))
