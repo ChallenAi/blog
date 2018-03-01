@@ -1,24 +1,24 @@
 {
 	"dev": {
 		"host": "127.0.0.1",
-		"port": "3010",
+		"port": "9210",
 		"pgsql": {
-			"db": "xgds",
-			"host": "121.196.195.164",
-			"port": "5432",
-			"username": "postgres",
-			"passwd": "123456"
-		}
-	},
-	"prod": {
-		"host": "https://api.xuangudashi.com",
-		"port": "8010",
-		"pgsql": {
-			"db": "xgds",
+			"db": "fga",
 			"host": "127.0.0.1",
 			"port": "5432",
 			"username": "postgres",
-			"passwd": "123456"
+			"passwd": "root"
+		}
+	},
+	"prod": {
+		"host": "http://test.fengyiai.com",
+		"port": "9210",
+		"pgsql": {
+			"db": "fga",
+			"host": "127.0.0.1",
+			"port": "5432",
+			"username": "postgres",
+			"passwd": "root"
 		}
 	},
 	"smsUrl": "127.0.0.1:8012"

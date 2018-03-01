@@ -1,13 +1,13 @@
 {
-  "name": "xgds-api",
+  "name": "iTools-api",
   "version": "1.0.0",
   "main": "bin/www",
   "private": "true",
   "apidoc": {
-    "name": "选股大师api文档",
+    "name": "iTools api文档",
     "version": "1.0.0",
     "title": "api文档",
-    "url": "https://api.xuangudashi.com",
+    "url": "https://test.fengyiai.com",
     "forceLanguage": "zh-cn"
   },
   "scripts": {
@@ -17,12 +17,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "http://184i5y4446.iok.la/xgds/api.git"
+    "url": "http://127.0.0.1/fga/iTools_api.git"
   },
   "keywords": [
     "nodejs"
   ],
-  "author": "LinkedYou",
+  "author": "Challen.Ai",
   "dependencies": {
     "body-parser": "^1.18.1",
     "cross-env": "^5.0.5",
