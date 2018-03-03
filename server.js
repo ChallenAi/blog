@@ -35,28 +35,27 @@ router(app)
 if (app.get('env') === 'prod') {
     app.use((err, req, res, next) => {
         res.status(500)
-        res.json({
-            code: 500,
-            // no message in prod env
-            msg: err.message,
-        })
         console.log(err)
+        // 生产环境中在此收集错误日志，并截断中间件，不返回msg
+        return res.json({
+            code: 500,
+        })
     })
 }
 
 app.use((err, req, res, next) => {
     res.status(500)
-    res.json({
+    console.log(err)
+    return res.json({
         code: 500,
         msg: err.message,
     })
-    console.log(err)
 })
 
 app.use((req, res) => {
     res.status(404)
     res.json({
-        stat: 404,
+        code: 404,
         msg: '访问的url不存在',
     })
 })

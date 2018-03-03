@@ -5,36 +5,41 @@ class TagController extends Controller {
     /**
      * @api {get} /tags 根据条件查询标签
      * @apiVersion 1.0.0
-     * @apiName gettags
+     * @apiName getTags
      * @apiGroup tag_new
      * @apiPermission anyone
-     *
-     * @apiParam {String} deleted 是否被删除,'1'是选择已被删的，其他则是选未删除的，不传deleted则会查询所有的
-     * @apiParam {String} uid 根据用户id查帖子
-     * @apiParam {String} typeId 根据标签id来查找帖子
-     * @apiParam {String} pageNumber 第几页
-     * @apiParam {String} pageSize 每页几条数据
      *
      * @apiSuccessExample {json} 查询成功
      *   {
      *     "code": 0,
-     *     "count": 1, 
      *     "data": [
      *       {
-     *         "tagId": "1",
-     *         "userId": "1",
-     *         "title": "标题",
-     *         "content": "### 则是一片标签的征文",
-     *         "typeId": "1",
-     *         "view": "0",
-     *         "like": "0",
-     *         "collect": "0",
-     *         "rank": "0",
-     *         "deleted": false,
-     *         "createdAt": "2018-03-01T14:45:35.000Z",
-     *         "updatedAt": "2018-03-01T14:45:38.000Z"
-     *       }
-     *     ]
+     *           "id": "1",
+     *           "name": "root",
+     *           "children": [
+     *             {
+     *                 "id": "2",
+     *                 "name": "机器学习",
+     *                 "children": []
+     *             },
+     *             {
+     *                 "id": "6",
+     *                 "name": "web",
+     *                 "children": [
+     *                     {
+     *                         "id": "7",
+     *                         "name": "javascript",
+     *                         "children": [
+     *                           {
+     *                               "id": "9",
+     *                               "name": "react",
+     *                               "children": []
+     *                           }
+     *                        ]
+     *                     }
+     *                 ]
+     *             }
+     *         ]
      *   }
      *
      * @apiErrorExample {json} 服务器错误
@@ -48,7 +53,43 @@ class TagController extends Controller {
         try {
             const resu = await tagService
                 .getTags()
-            return this.querySuccess(res, resu)
+
+            const arrToTree = nodes => {
+                // 先排序
+                nodes.sort((i, j) => i.id - j.id)
+                // 根节点的父元素id
+                const rootParentId = 0, map = {}, roots = [];
+                let node;
+                for (let i = 0; i < nodes.length; i += 1) {
+                    node = nodes[i];
+                    node.children = [];
+                    map[node.id] = i; // 使用map来找到parent
+                    if (node.parentId !== rootParentId) {
+                        nodes[map[node.parentId]].children.push(node);
+                    } else {
+                        roots.push(node);
+                    }
+                }
+                return roots
+            }
+
+            const tagsTree = arrToTree(resu)
+
+            // 遍历对象树,格式化成前端需要的格式
+            const ObjTreeTravel = node => {
+                node.name = node.content
+                delete node.content
+                delete node.parentId
+                if (node.children.length === 0 ) {
+                    delete node.children
+                } else {
+                    node.children.map(ObjTreeTravel)
+                }
+            }
+
+            tagsTree.map(ObjTreeTravel)
+
+            return this.querySuccess(res, tagsTree)
         } catch (err) {
             next(err)
         }
@@ -57,11 +98,11 @@ class TagController extends Controller {
     /**
      * @api {delete} /tag/<id> 根据id删除标签
      * @apiVersion 1.0.0
-     * @apiName deletetag
+     * @apiName deleteTag
      * @apiGroup tag_new
      * @apiPermission admin
      *
-     * @apiSuccessExample {json} 查询成功
+     * @apiSuccessExample {json} 删除成功
      *   {
      *     "code": 0
      *   }
@@ -86,24 +127,24 @@ class TagController extends Controller {
      *
      */
     async deleteTag(req, res, next) {
-        // if (!req.params.tagId) return this.reqFail(res, '缺少标签id')
-        // try {
-        //     const resu = await tagService.deletetag({
-        //         tagId: req.params.tagId,
-        //     })
-        //     return this.querySuccess(res, resu)
-        // } catch (err) {
-        //     if (err.message === 'BadtagId') {
-        //         return this.reqFail(res, '无效的标签id')
-        //     }
-        //     next(err)
-        // }
+        if (!req.params.id) return this.reqFail(res, '缺少标签id')
+        try {
+            await tagService.deleteTag({
+                tagId: req.params.id,
+            })
+            return this.success(res)
+        } catch (err) {
+            if (err.message === 'BadTagId') {
+                return this.reqFail(res, '无效的标签id')
+            }
+            next(err)
+        }
     }
 
     /**
-     * @api {delete} /tag/<id> 根据id删除标签
+     * @api {post} /tag/<id> 根据id编辑
      * @apiVersion 1.0.0
-     * @apiName deletetag
+     * @apiName editTag
      * @apiGroup tag_new
      * @apiPermission admin
      *
@@ -132,24 +173,22 @@ class TagController extends Controller {
      *
      */
     async editTag(req, res, next) {
-        // if (!req.params.tagId) return this.reqFail(res, '缺少标签id')
-        // try {
-        //     const resu = await tagService.deletetag({
-        //         tagId: req.params.tagId,
-        //     })
-        //     return this.querySuccess(res, resu)
-        // } catch (err) {
-        //     if (err.message === 'BadtagId') {
-        //         return this.reqFail(res, '无效的标签id')
-        //     }
-        //     next(err)
-        // }
+        if (!req.params.id) return this.reqFail(res, '缺少标签id')
+        try {
+            const resu = await tagService.editTag(req.params.id)
+            return this.querySuccess(res, resu)
+        } catch (err) {
+            if (err.message === 'BadTagId') {
+                return this.reqFail(res, '无效的标签id')
+            }
+            next(err)
+        }
     }
 
     /**
-     * @api {delete} /tag/<id> 根据id删除标签
+     * @api {post} /tag/<id> 新增标签
      * @apiVersion 1.0.0
-     * @apiName deletetag
+     * @apiName addTag
      * @apiGroup tag_new
      * @apiPermission admin
      *
@@ -178,18 +217,19 @@ class TagController extends Controller {
      *
      */
     async addTag(req, res, next) {
-        // if (!req.params.tagId) return this.reqFail(res, '缺少标签id')
-        // try {
-        //     const resu = await tagService.deletetag({
-        //         tagId: req.params.tagId,
-        //     })
-        //     return this.querySuccess(res, resu)
-        // } catch (err) {
-        //     if (err.message === 'BadtagId') {
-        //         return this.reqFail(res, '无效的标签id')
-        //     }
-        //     next(err)
-        // }
+        const { title, content, authorId, typeId } = req.body
+        if (!title) return this.reqFail(res, '缺少标签标题')
+        if (!content) return this.reqFail(res, '缺少标签内容')
+        // if (!authorId) return this.reqFail(res, '无效的作者id')
+        if (!typeId) return this.reqFail(res, '无效的类型id')
+        try {
+            const resu = await tagService.addTag({
+                title, content, authorId, typeId,
+            })
+            return this.querySuccess(res, resu[0])
+        } catch (err) {
+            next(err)
+        }
     }
 }
 
