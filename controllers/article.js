@@ -110,6 +110,47 @@ class ArticleController extends Controller {
     }
 
     /**
+     * @api {get} /articles 查询所有文章有关的标签
+     * @apiVersion 1.0.0
+     * @apiName getarticles
+     * @apiGroup article_new
+     * @apiPermission anyone
+     *
+     * @apiSuccessExample {json} 查询成功
+     *   {
+     *     "code": 0,
+     *     "data": [
+     *       {
+     *            "id": "2",
+     *            "parentId": 1,
+     *            "content": "机器学习"
+     *        },
+     *        {
+     *            "id": "3",
+     *            "parentId": 1,
+     *            "content": "游戏"
+     *        }
+     *     ]
+     *   }
+     *
+     * @apiErrorExample {json} 服务器错误
+     *   {
+     *     "code": 500,
+     *     "msg": "服务器错误"
+     *   }
+     *
+     */
+    async getAllTags(req, res, next) {
+        try {
+            const resu = await articleService
+                .getAllTags()
+            return this.querySuccess(res, resu)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    /**
      * @api {delete} /article/<id> 根据id删除文章
      * @apiVersion 1.0.0
      * @apiName deletearticle
@@ -156,7 +197,7 @@ class ArticleController extends Controller {
     }
 
     /**
-     * @api {delete} /article/<id> 根据id删除文章
+     * @api {get} /article/<id> 根据id获取文章
      * @apiVersion 1.0.0
      * @apiName deletearticle
      * @apiGroup article_new
@@ -200,7 +241,7 @@ class ArticleController extends Controller {
     }
 
     /**
-     * @api {delete} /article/<id> 根据id删除文章
+     * @api {post} /article/<id> 发布文章
      * @apiVersion 1.0.0
      * @apiName deletearticle
      * @apiGroup article_new

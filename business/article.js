@@ -58,6 +58,18 @@ class ArticleService extends Business {
         return resu
     }
 
+    async getAllTags() {
+        const resu = await this.db({ a: 'article', t: 'tag' })
+            .groupByRaw('a.type_id, t.content')
+            .whereRaw('a.type_id = t.tag_id')
+            .select(
+                { typeId: 'a.type_id' },
+                { typeName: 't.content' },
+                { articleCount: this.db.raw('COUNT(a.type_id)') })
+
+        return resu
+    }
+
     async getArticle(articleId) {
         const resu = await this.db({ a: 'article', u: 'user', t: 'tag' })
             .whereRaw('a.type_id = t.tag_id and u.user_id = a.user_id')

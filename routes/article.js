@@ -11,5 +11,7 @@ route.get('/api/articlesTitles', article.getArticlesTitles.bind(article))
 route.get('/api/article/:id', article.getArticle.bind(article))
 // 发送文章
 route.post('/api/article', article.postArticle.bind(article))
+// 查找所有文章标签
+route.get('/api/articles/tags', article.getAllTags.bind(article))
 
 module.exports = route

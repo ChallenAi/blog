@@ -17,29 +17,9 @@ class TagService extends Business {
         return resu
     }
 
-    async getTag({ articleId }) {
-        const resu = await this.db('article')
-            .where({ article_id: articleId })
-            .select(
-                { TagContentId: 'article_id' },
-                { contentType: 'content_type' },
-                'title',
-                'author',
-                'addTime',
-                'published',
-                'description',
-                'content',
-                { thumbnailUrl: 'thumbnail_url' },
-                { collectQty: 'collect_qty' },
-                { goodQty: 'good_qty' }
-            )
-            .limit(1)
+    async editTag({ articleId }) {}
 
-        if (resu.length === 0) {
-            throw new Error('BadArticleId')
-        }
-        return resu[0]
-    }
+    async deleteTag({ articleId }) {}
 }
 
 module.exports = new TagService()
