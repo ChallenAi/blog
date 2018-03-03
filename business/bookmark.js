@@ -1,22 +1,11 @@
 const Business = require('../base/Business')
 
 class BookmarkService extends Business {
-    async deleteBookmark({ title, content, authorId, typeId }) {
-        const data = {
-            user_id: authorId,
-            title,
-            content,
-            type_id: typeId,
-            view: 0,
-            like: 0,
-            collect: 0,
-            rank: 0,
-            deleted: false,
-            created_at: new Date(),
-            updated_at: new Date(),
-        }
-        const resu = await this.db('Bookmark').insert(data, 'Bookmark_id')
-        return resu
+    async deleteBookmark({ bookmarkId }) {
+        const resu = await this.db('bookmark')
+            .where({ bookmark_id: bookmarkId })
+            .del()
+        if (resu === 0) throw new Error('BadBookmarkId')
     }
 
     async getBookmarks({ keyword, limit, offset }) {
