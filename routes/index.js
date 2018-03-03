@@ -1,6 +1,6 @@
 // const auth = require('./auth')
 // const user = require('./user')
-// const bookmark = require('./bookmark')
+const bookmark = require('./bookmark')
 // const sign = require('./sign')
 // const reward = require('./reward')
 // const cms = require('./cms')
@@ -9,4 +9,4 @@
 const article = require('./article')
 const tag = require('./tag')
 
-module.exports = app => app.use(article, tag)
+module.exports = app => app.use(article, bookmark, tag)

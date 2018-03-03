@@ -9,7 +9,7 @@ class BookmarkController extends Controller {
      * @apiGroup bookmark_new
      * @apiPermission anyone
      *
-     * @apiParam {String} cotegoryId 书签名
+     * @apiParam {String} keyword 书签名(关键词)
      * @apiParam {String} pageNumber 第几页
      * @apiParam {String} pageSize 每页几条数据
      *
@@ -36,15 +36,14 @@ class BookmarkController extends Controller {
      */
     async getBookmarks(req, res, next) {
         try {
-            let limit
+            const limit = parseInt(req.query.pageSize || 50, 10)
             let offset = 0
-            if (req.query.pageSize) limit = parseInt(req.query.pageSize || 20, 10)
             if (req.query.pageNumber) {
                 offset = parseInt((req.query.pageNumber - 1) * limit, 10)
             }
             const resu = await bookmarkService
-                .getArticles({
-                    categoryId: req.query.categoryId,
+                .getBookmarks({
+                    keyword: req.query.keyword,
                     limit,
                     offset,
                 })

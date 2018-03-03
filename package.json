@@ -1,8 +1,8 @@
 {
-  "name": "iTools-api",
+  "name": "itools-api",
   "version": "1.0.0",
   "main": "bin/www",
-  "private": "true",
+  "private": true,
   "apidoc": {
     "name": "iTools api文档",
     "version": "1.0.0",

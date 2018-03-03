@@ -231,18 +231,19 @@ class ArticleController extends Controller {
      *
      */
     async postArticle(req, res, next) {
-        // if (!req.params.articleId) return this.reqFail(res, '缺少文章id')
-        // try {
-        //     const resu = await articleService.deletearticle({
-        //         articleId: req.params.articleId,
-        //     })
-        //     return this.querySuccess(res, resu)
-        // } catch (err) {
-        //     if (err.message === 'BadArticleId') {
-        //         return this.reqFail(res, '无效的文章id')
-        //     }
-        //     next(err)
-        // }
+        const { title, content, authorId, typeId } = req.body
+        if (!title) return this.reqFail(res, '缺少文章标题')
+        if (!content) return this.reqFail(res, '缺少文章内容')
+        if (!authorId) return this.reqFail(res, '无效的作者id')
+        if (!typeId) return this.reqFail(res, '无效的类型id')
+        try {
+            const resu = await articleService.addArticle({
+                title, content, authorId, typeId,
+            })
+            return this.querySuccess(res, resu[0])
+        } catch (err) {
+            next(err)
+        }
     }
 }
 

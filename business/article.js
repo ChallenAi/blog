@@ -1,10 +1,22 @@
 const Business = require('../base/Business')
 
 class ArticleService extends Business {
-    async addArticle({ title }) {
-        const prId = this.getGuid()
-        const dateNow = this.getDateString()
-        await this.db('xxx')
+    async addArticle({ title, content, authorId, typeId }) {
+        const data = {
+            user_id: authorId,
+            title,
+            content,
+            type_id: typeId,
+            view: 0,
+            like: 0,
+            collect: 0,
+            rank: 0,
+            deleted: false,
+            created_at: new Date(),
+            updated_at: new Date(),
+        }
+        const resu = await this.db('article').insert(data, 'article_id')
+        return resu
     }
 
     async getArticles({ condition, limit, offset }) {
@@ -14,6 +26,7 @@ class ArticleService extends Business {
         const resu = await this.db({ a: 'article', u: 'user', t: 'tag' })
             .whereRaw('a.type_id = t.tag_id and u.user_id = a.user_id')
             .andWhere(where)
+            .orderBy('a.updated_at', 'desc')
             .limit(limit)
             .offset(offset)
             .select({
@@ -31,6 +44,7 @@ class ArticleService extends Business {
                 type: 't.content',
                 username: 'u.user_name',
             })
+        resu.map(i => i.content = i.content.substring(0, 90))
         return resu
     }
 
