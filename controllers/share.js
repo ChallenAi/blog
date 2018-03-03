@@ -47,7 +47,7 @@ class ShareController extends Controller {
             // 查询参数：带默认值的，必须有的
             condition.deleted = (q.deleted === '1')?true:false
             const page = parseInt(q.page || 1)
-            const limit = parseInt(q.perpage || 10)
+            const limit = parseInt(q.perpage || 50)
             const offset = limit * (page - 1)
             // 如果查询特定类型的分享
             if (q.typeId) condition.typeId = q.typeId
@@ -171,12 +171,6 @@ class ShareController extends Controller {
      *     "msg": "缺少分享id"
      *   }
      *
-     * @apiErrorExample {json} 未找到分享
-     *   {
-     *     "code": 500,
-     *     "msg": "未找到分享"
-     *   }
-     *
      * @apiErrorExample {json} 服务器错误
      *   {
      *     "code": 500,
@@ -188,13 +182,13 @@ class ShareController extends Controller {
         const { title, content, authorId, typeId } = req.body
         if (!title) return this.reqFail(res, '缺少分享标题')
         if (!content) return this.reqFail(res, '缺少分享内容')
-        // if (!authorId) return this.reqFail(res, '无效的作者id')
+        if (!authorId) return this.reqFail(res, '无效的作者id')
         if (!typeId) return this.reqFail(res, '无效的类型id')
         try {
-            const resu = await shareService.addshare({
+            await shareService.addShare({
                 title, content, authorId, typeId,
             })
-            return this.querySuccess(res, resu[0])
+            return this.success(res)
         } catch (err) {
             next(err)
         }
