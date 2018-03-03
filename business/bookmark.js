@@ -4,7 +4,7 @@ class BookmarkService extends Business {
     async deleteBookmark({ bookmarkId }) {
         const resu = await this.db('bookmark')
             .where({ bookmark_id: bookmarkId })
-            .del()
+            .update({ is_deleted: true })
         if (resu === 0) throw new Error('BadBookmarkId')
     }
 

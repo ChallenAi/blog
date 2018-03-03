@@ -5,6 +5,8 @@ const route = express.Router()
 
 // 根据条件查询标签
 route.get('/api/tags', tag.getTags.bind(tag))
+// 根据条件查询标签树
+route.get('/api/tagstree', tag.getTagsTree.bind(tag))
 // 添加标签
 route.post('/api/tag', tag.addTag.bind(tag))
 // 编辑标签

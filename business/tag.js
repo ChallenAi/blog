@@ -1,10 +1,9 @@
 const Business = require('../base/Business')
 
 class TagService extends Business {
-    async addTag({ title }) {
-        const prId = this.getGuid()
-        const dateNow = this.getDateString()
-        await this.db('xxx')
+    async addTag({ content, parentId }) {
+        const data = { content, parent_id: parentId }
+        await this.db('tag').insert(data)
     }
 
     async getTags() {

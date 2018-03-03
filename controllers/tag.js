@@ -53,6 +53,63 @@ class TagController extends Controller {
         try {
             const resu = await tagService
                 .getTags()
+            return this.querySuccess(res, resu)
+        } catch (err) {
+            next(err)
+        }
+    }
+
+    /**
+     * @api {get} /tags 根据条件查询标签
+     * @apiVersion 1.0.0
+     * @apiName getTags
+     * @apiGroup tag_new
+     * @apiPermission anyone
+     *
+     * @apiSuccessExample {json} 查询成功
+     *   {
+     *     "code": 0,
+     *     "data": [
+     *       {
+     *           "id": "1",
+     *           "name": "root",
+     *           "children": [
+     *             {
+     *                 "id": "2",
+     *                 "name": "机器学习",
+     *                 "children": []
+     *             },
+     *             {
+     *                 "id": "6",
+     *                 "name": "web",
+     *                 "children": [
+     *                     {
+     *                         "id": "7",
+     *                         "name": "javascript",
+     *                         "children": [
+     *                           {
+     *                               "id": "9",
+     *                               "name": "react",
+     *                               "children": []
+     *                           }
+     *                        ]
+     *                     }
+     *                 ]
+     *             }
+     *         ]
+     *   }
+     *
+     * @apiErrorExample {json} 服务器错误
+     *   {
+     *     "code": 500,
+     *     "msg": "服务器错误"
+     *   }
+     *
+     */
+    async getTagsTree(req, res, next) {
+        try {
+            const resu = await tagService
+                .getTags()
 
             const arrToTree = nodes => {
                 // 先排序
@@ -89,7 +146,7 @@ class TagController extends Controller {
 
             tagsTree.map(ObjTreeTravel)
 
-            return this.querySuccess(res, tagsTree)
+            return this.querySuccess(res, tagsTree[0])
         } catch (err) {
             next(err)
         }
@@ -192,21 +249,21 @@ class TagController extends Controller {
      * @apiGroup tag_new
      * @apiPermission admin
      *
-     * @apiSuccessExample {json} 查询成功
+     * @apiSuccessExample {json} 新增成功
      *   {
      *     "code": 0
      *   }
      *
-     * @apiErrorExample {json} 缺少标签id
+     * @apiErrorExample {json} 缺少标签内容
      *   {
      *     "code": 500,
-     *     "msg": "缺少标签id"
+     *     "msg": "缺少标签内容"
      *   }
      *
-     * @apiErrorExample {json} 未找到标签
+     * @apiErrorExample {json} 无效的父标签id
      *   {
      *     "code": 500,
-     *     "msg": "未找到标签"
+     *     "msg": "无效的父标签id"
      *   }
      *
      * @apiErrorExample {json} 服务器错误
@@ -217,17 +274,18 @@ class TagController extends Controller {
      *
      */
     async addTag(req, res, next) {
-        const { title, content, authorId, typeId } = req.body
-        if (!title) return this.reqFail(res, '缺少标签标题')
+        const { content, parentId } = req.body
         if (!content) return this.reqFail(res, '缺少标签内容')
-        // if (!authorId) return this.reqFail(res, '无效的作者id')
-        if (!typeId) return this.reqFail(res, '无效的类型id')
+        if (!parentId) return this.reqFail(res, '无效的父标签id')
         try {
             const resu = await tagService.addTag({
-                title, content, authorId, typeId,
+                content, parentId,
             })
-            return this.querySuccess(res, resu[0])
+            return this.success(res)
         } catch (err) {
+            if (err.code === "23505") {
+                return this.reqFail(res, '标签名重复了')
+            }
             next(err)
         }
     }
