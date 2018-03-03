@@ -87,6 +87,10 @@ class Controller {
         return validator.isUUID(str)
     }
 
+    isIncreamentId(number) {
+        return validator.isInt(number)
+    }
+
     isAdmin() {}
 }
 
