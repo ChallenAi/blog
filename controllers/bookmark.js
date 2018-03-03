@@ -85,15 +85,15 @@ class BookmarkController extends Controller {
      *
      */
     async deleteBookmark(req, res, next) {
-        if (!req.params.articleId) return this.reqFail(res, '缺少文章id')
+        if (!req.params.id) return this.reqFail(res, '缺少文章id')
         try {
-            const resu = await bookmarkService.deleteBookmark({
-                articleId: req.params.articleId,
+            await bookmarkService.deleteBookmark({
+                bookmarkId: req.params.id,
             })
-            return this.querySuccess(res, resu)
+            return this.success(res)
         } catch (err) {
-            if (err.message === 'BadArticleId') {
-                return this.reqFail(res, '无效的文章id')
+            if (err.message === 'BadBookmarkId') {
+                return this.reqFail(res, '无效的书签id')
             }
             next(err)
         }
