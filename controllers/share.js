@@ -142,11 +142,21 @@ class ShareController extends Controller {
      */
     async editShare(req, res, next) {
         if (!req.params.id) return this.reqFail(res, '缺少分享id')
+        const { title, content, authorId, typeId, bgImg } = req.body
+        const updation = {}
+        if (title) updation.title = title
+        if (content) updation.content = content
+        if (authorId) updation.user_id = authorId
+        if (typeId) updation.type_id = typeId
+        if (bgImg) updation.background_img = bgImg
+
+        if (!title && !content && !authorId && !typeId && !bgImg) return this.reqFail(res, '没有可编辑的内容')
+
         try {
-            const resu = await shareService.editShare(req.params.id)
-            return this.querySuccess(res, resu)
+            await shareService.editShare(req.params.id, updation)
+            return this.success(res)
         } catch (err) {
-            if (err.message === 'BadshareId') {
+            if (err.message === 'BadShareId') {
                 return this.reqFail(res, '无效的分享id')
             }
             next(err)
