@@ -9,5 +9,6 @@ const bookmark = require('./bookmark')
 const article = require('./article')
 const tag = require('./tag')
 const share = require('./share')
+const tip = require('./tip')
 
-module.exports = app => app.use(article, bookmark, tag, share)
+module.exports = app => app.use(article, bookmark, tag, share, tip)

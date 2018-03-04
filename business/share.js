@@ -19,7 +19,7 @@ class ShareService extends Business {
         const where = { is_deleted: condition.deleted }
         if (condition.typeId) where.type_id = condition.typeId
         const resu = await this.db({ s: 'share', t: 'tag' })
-            .orderBy('s.share_id')
+            .orderBy('s.share_id', 'desc')
             .whereRaw('s.type_id = t.tag_id')
             .andWhere(where)
             .limit(limit)
@@ -35,7 +35,13 @@ class ShareService extends Business {
         return resu
     }
 
-    async editShare({ shareId }) {}
+    async editShare(shareId, updation) {
+        updation.updated_at = new Date()
+        const resu = await this.db('share')
+            .where({ share_id: shareId })
+            .update(updation)
+        if (resu === 0) throw new Error('BadShareId')
+    }
 
     async deleteShare({ shareId }) {
         const resu = await this.db('share')
