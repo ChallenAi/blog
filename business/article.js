@@ -23,6 +23,32 @@ class ArticleService extends Business {
         const where = {}
         if (condition.userId) where['a.user_id'] = condition.userId
         if (condition.typeId) where['a.type_id'] = condition.typeId
+        if (condition.keyword) {
+            const resu = await this.db({ a: 'article', u: 'user', t: 'tag' })
+                .whereRaw('a.type_id = t.tag_id and u.user_id = a.user_id')
+                .andWhere('a.title', 'like', `%${condition.keyword}%`)
+                .andWhere(where)
+                .orderBy('a.updated_at', 'desc')
+                .limit(limit)
+                .offset(offset)
+                .select({
+                    id: 'a.article_id',
+                    userId: 'a.user_id',
+                    typeId: 'a.type_id',
+                    title: 'a.title',
+                    content: 'a.content',
+                    view: 'a.view',
+                    like: 'a.like',
+                    collect: 'a.collect',
+                    rank: 'a.rank',
+                    createdAt: 'a.created_at',
+                    updatedAt: 'a.updated_at',
+                    type: 't.content',
+                    username: 'u.user_name',
+                })
+            resu.map(i => i.content = i.content.substring(0, 90))
+            return resu
+        }
         const resu = await this.db({ a: 'article', u: 'user', t: 'tag' })
             .whereRaw('a.type_id = t.tag_id and u.user_id = a.user_id')
             .andWhere(where)
