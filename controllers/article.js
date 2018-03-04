@@ -10,6 +10,7 @@ class ArticleController extends Controller {
      * @apiPermission anyone
      *
      * @apiParam {String} deleted 是否被删除,'1'是选择已被删的，其他则是选未删除的，不传deleted则会查询所有的
+     * @apiParam {String} keyword 根据关键字查帖子
      * @apiParam {String} uid 根据用户id查帖子
      * @apiParam {String} typeId 根据标签id来查找帖子
      * @apiParam {String} pageNumber 第几页
@@ -57,6 +58,7 @@ class ArticleController extends Controller {
             // 如果查询特定用户/类型的文章
             if (q.uid) condition.userId = q.uid
             if (q.typeId) condition.typeId = q.typeId
+            if (q.keyword) condition.keyword = q.keyword
             const resu = await articleService
                 .getArticles({
                     condition,
