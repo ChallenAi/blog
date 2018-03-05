@@ -1,5 +1,5 @@
 // const auth = require('./auth')
-// const user = require('./user')
+const user = require('./user')
 const bookmark = require('./bookmark')
 // const sign = require('./sign')
 // const reward = require('./reward')
@@ -11,4 +11,4 @@ const tag = require('./tag')
 const share = require('./share')
 const tip = require('./tip')
 
-module.exports = app => app.use(article, bookmark, tag, share, tip)
+module.exports = app => app.use(article, bookmark, tag, share, tip, user)

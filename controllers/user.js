@@ -55,6 +55,14 @@ class UserController extends Controller {
      */
     async login(req, res, next) {
         const d = req.body
+        if (!d.username) return this.reqFail(res, '用户名不能为空')
+        if (!d.password) return this.reqFail(res, '密码不能为空')
+        if (d.username === 'Challen') {
+            if (d.password === 'fenxiangkuaile') return this.querySuccess(res, {id: 1, username: 'Challen'})
+            return this.reqFail(res, '用户名或密码错误')
+        }
+        return this.reqFail(res, '该用户名未被注册')
+        /*
         try {
             if (!d.phoneNum || !this.isPhone(d.phoneNum)) return this.reqFail(res, '手机号错误')
             if (!d.password) return this.reqFail(res, '密码不能为空')
@@ -71,6 +79,7 @@ class UserController extends Controller {
             }
             next(err)
         }
+        */
     }
 
     /**
@@ -112,6 +121,8 @@ class UserController extends Controller {
      *
      */
     async register(req, res, next) {
+        return this.reqFail(res, '注册功能已被管理员禁用')
+        /*
         const d = req.body
         try {
             if (!d.phoneNum || !this.isPhone(d.phoneNum)) return this.reqFail(res, '手机号错误')
@@ -136,6 +147,7 @@ class UserController extends Controller {
             console.log(err)
             next(err)
         }
+        */
     }
 
     /**
