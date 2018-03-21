@@ -233,7 +233,9 @@ class ArticleController extends Controller {
         if (!req.params.id) return this.reqFail(res, '缺少文章id')
         try {
             const resu = await articleService.getArticle(req.params.id)
-            return this.querySuccess(res, resu)
+            this.querySuccess(res, resu)
+            // view++ 阅读次数++，在返回了结果之后，异步从而不影响请求响应
+            return await articleService.articleViewPlusOne(req.params.id)
         } catch (err) {
             if (err.message === 'BadArticleId') {
                 return this.reqFail(res, '无效的文章id')
