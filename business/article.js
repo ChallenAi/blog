@@ -122,6 +122,15 @@ class ArticleService extends Business {
         }
         return resu[0]
     }
+
+    async articleViewPlusOne(articleId) {
+        await this.db('article')
+            .where({ article_id: articleId })
+            .update({
+                view: this.db.raw('?? + 1', ['view'])
+            })
+        return
+    }
 }
 
 module.exports = new ArticleService()

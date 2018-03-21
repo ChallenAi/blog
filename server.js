@@ -1,4 +1,6 @@
 const express = require('express')
+const compression = require('compression');
+
 const fs = require('fs')
 const path = require('path')
 const bodyParser = require('body-parser')
@@ -10,6 +12,8 @@ const config = process.env.NODE_ENV === 'prod' ? configFile.prod : configFile.de
 const router = require('./routes')
 
 const app = express()
+
+app.use(compression())
 
 app.set('port', process.env.PORT || config.port)
 app.disable('x-powered-by')
@@ -23,8 +27,6 @@ if (process.env.NODE_ENV === 'prod') {
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
-
-app.use(express.static(`${__dirname}/public`))
 
 app.disable('etag')
 
@@ -52,12 +54,11 @@ app.use((err, req, res, next) => {
     })
 })
 
-app.use((req, res) => {
-    res.status(404)
-    res.json({
-        code: 404,
-        msg: '访问的url不存在',
-    })
-})
+// UI
+app.use('/', express.static(path.join(__dirname, 'public')));
+app.get('/*', (req, res) => {
+  res.sendFile(path.resolve(path.join(__dirname, 'public/index.html')));
+});
+
 
 module.exports = app
