@@ -118,10 +118,14 @@ class TagController extends Controller {
                 const rootParentId = 0, map = {}, roots = [];
                 let node;
                 for (let i = 0; i < nodes.length; i += 1) {
+                    //获取当前元素
                     node = nodes[i];
                     node.children = [];
+                    // 键是当前元素id, 值是idx
                     map[node.id] = i; // 使用map来找到parent
                     if (node.parentId !== rootParentId) {
+                        // 节点中的id等于当前节点父id的元素.children
+                        // 即找寻到了当前节点的父元素
                         nodes[map[node.parentId]].children.push(node);
                     } else {
                         roots.push(node);

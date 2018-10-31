@@ -46,7 +46,6 @@ class UserService extends Business {
         }
     }
 
-    // 验证码是否正确
     async verifySmsCode(mobile, validCode) {
         const existedCode = await this.db('sms_valid_code')
             .where({
@@ -98,7 +97,6 @@ class UserService extends Business {
         }).update(user)
     }
 
-    // 保存验证码到数据库
     saveSmsCode(mobile, validCode) {
         const data = {}
         data.mobile = mobile

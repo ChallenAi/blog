@@ -18,3 +18,5 @@ npm run dev
 * [ok]tip&gist三栏比例微调
 * 添加文章删除和编辑功能
 * 保存登录状态功能(写入sess)
+* 关闭本地log(先看看pm2的log怎么看带url的)
+* 修改host-dev模式下只监听本地
